@@ -24,35 +24,39 @@ abstract class StaticHelper
     /**
      * Cleans swiss and frech phone numbers.
      */
-    public static function cleanPhoneNumber(null|string $number, $spaces = true): null|string
+    public static function cleanPhoneNumber(null|string $number, $spaces = true, $country = 'CH'): null|string
     {
         if (null === $number || empty($number)) {
             return null;
         }
         $number = trim($number);
         $number = preg_replace('/[oO]/', '0', $number);
-        $number = preg_replace('/[^0-9]/', '', $number);
+        $number = preg_replace('/\D/', '', $number);
         $number = preg_replace('/^00/', '+', $number);
+        $number = preg_replace('/^410/', '+41', $number);
         $number = preg_replace('/^41/', '+41', $number);
         $number = preg_replace('/^33/', '+33', $number);
         $number = preg_replace('/^34/', '+34', $number);
-        $number = preg_replace('/^0/', '+41', $number);
         // switzerland ONLY, might break
-        $number = preg_replace('/^22/', '+4122', $number);
-        $number = preg_replace('/^21/', '+4121', $number);
+        switch ($country) {
+            case 'CH':
+                $number = preg_replace('/^0/', '+41', $number);
+                $number = preg_replace('/^([1-9]\d)/', '+41\1', $number);
+                break;
+        }
 
         if ($spaces) {
             // +41 ## ### ## ##
             if (preg_match('/^\+41/', $number)) {
-                $number = substr($number, 0, 3).' '.substr($number, 3, 2).' '.substr($number, 5, 3).' '.substr($number, 8, 2).' '.substr($number, 10, 2);
+                return substr($number, 0, 3).' '.substr($number, 3, 2).' '.substr($number, 5, 3).' '.substr($number, 8, 2).' '.substr($number, 10, 2);
             }
             // +33 # ## ## ## ##
             if (preg_match('/^\+33/', $number)) {
-                $number = substr($number, 0, 3).' '.substr($number, 3, 1).' '.substr($number, 4, 2).' '.substr($number, 6, 2).' '.substr($number, 8, 2).' '.substr($number, 10, 2);
+                return substr($number, 0, 3).' '.substr($number, 3, 1).' '.substr($number, 4, 2).' '.substr($number, 6, 2).' '.substr($number, 8, 2).' '.substr($number, 10, 2);
             }
             // +34 ### ### ###
             if (preg_match('/^\+34/', $number)) {
-                $number = substr($number, 0, 3).' '.substr($number, 3, 3).' '.substr($number, 6, 3).' '.substr($number, 9, 3);
+                return substr($number, 0, 3).' '.substr($number, 3, 3).' '.substr($number, 6, 3).' '.substr($number, 9, 3);
             }
         }
 
@@ -96,7 +100,7 @@ abstract class StaticHelper
         // 4. Sum the results of steps 2 and 3.
         $total_sum = $even_sum_three + $odd_sum;
         // 5. The check character is the smallest number which, when added to the result in step 4,  produces a multiple of 10.
-        $next_ten = (ceil($total_sum / 10)) * 10;
+        $next_ten = ceil($total_sum / 10) * 10;
 
         return $next_ten - $total_sum;
     }
