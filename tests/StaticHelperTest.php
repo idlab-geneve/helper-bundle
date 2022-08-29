@@ -17,8 +17,11 @@ class StaticHelperTest extends TestCase
     public function testCleanPhoneNumber(): void
     {
         $this->assertEquals('+41 21 123 12 21', StaticHelper::cleanPhoneNumber(' 021.123.12.21 '));
-        $this->assertEquals('+41 21 123 12 21', StaticHelper::cleanPhoneNumber(' 021 123-1221'));
+        $this->assertEquals('+41 21 784 54 12', StaticHelper::cleanPhoneNumber(' 21. 784 54.12 ', true, 'CH'));
+        $this->assertEquals('+41211231221', StaticHelper::cleanPhoneNumber(' 021 123-1221', false));
         $this->assertEquals('+41 21 123 12 21', StaticHelper::cleanPhoneNumber(' +41(21)1231221'));
+        $this->assertEquals('+41 21 123 12 21', StaticHelper::cleanPhoneNumber(' +41(0)211231221'));
+        $this->assertEquals('+41 21 123 12 21', StaticHelper::cleanPhoneNumber(' +41 (0)21 123 12 21'));
         $this->assertEquals('+41 21 123 12 21', StaticHelper::cleanPhoneNumber(' (021) 1.2-3..122-1'));
         $this->assertEquals('+33 6 12 34 56 78', StaticHelper::cleanPhoneNumber('00336 12 34 56 78'));
         $this->assertEquals('+33 6 12 34 56 78', StaticHelper::cleanPhoneNumber('+336,12.34-56 78'));

@@ -2,7 +2,11 @@
 
 ## Idlab Helper Bundle
 
-### [0.0.1] - implement initial static methods:
+### [0.1.0] - improve Swiss phone number cleaning
+
+- improve Swiss phone number cleaning
+
+### [0.0.1] - implement initial static methods
 
 - areNumbersInStringSame : Check whether numbers in a pair of string match exactly
 - camelCaseToSnakeCaseConverter : Converts a camelCase tsring to a snake_caste string
